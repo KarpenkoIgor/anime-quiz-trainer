@@ -1,0 +1,8 @@
+export default class API {
+  static Auth = class {
+    static Register = '/api/auth/register'
+    static Login = '/api/auth/login'
+    static Refresh = '/api/auth/refresh'
+    static Logout = '/api/auth/logout'
+  }
+}

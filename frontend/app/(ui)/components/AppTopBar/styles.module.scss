@@ -1,0 +1,6 @@
+.appBar {
+    & .toolbar {
+        gap: 10px;
+        justify-content: flex-end;
+    }
+}
