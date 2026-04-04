@@ -16,6 +16,17 @@ builder.Services.AddRouting(options => options.LowercaseUrls = true);
 builder.Services.AddControllers();
 
 // ── Application & Infrastructure ─────────────────────────────────────────────
+// Normalize connection string: Railway/Heroku provide postgresql://user:pass@host:port/db
+// but Npgsql expects Host=...;Port=...;Username=...;Password=...;Database=...
+var rawConnStr = builder.Configuration.GetConnectionString("DefaultConnection") ?? "";
+if (rawConnStr.StartsWith("postgres://") || rawConnStr.StartsWith("postgresql://"))
+{
+    var uri = new Uri(rawConnStr);
+    var userInfo = uri.UserInfo.Split(':');
+    builder.Configuration["ConnectionStrings:DefaultConnection"] =
+        $"Host={uri.Host};Port={uri.Port};Database={uri.AbsolutePath.TrimStart('/')};Username={userInfo[0]};Password={userInfo[1]}";
+}
+
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
