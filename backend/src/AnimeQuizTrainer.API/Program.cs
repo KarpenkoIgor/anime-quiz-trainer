@@ -2,8 +2,10 @@ using System.Reflection;
 using System.Text;
 using AnimeQuizTrainer.API.Middleware;
 using AnimeQuizTrainer.Application.Extensions;
+using AnimeQuizTrainer.Infrastructure.Data;
 using AnimeQuizTrainer.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
@@ -92,17 +94,18 @@ builder.Services.AddCors(options =>
 // ─────────────────────────────────────────────────────────────────────────────
 var app = builder.Build();
 
+// Auto-apply migrations on startup
+using (var scope = app.Services.CreateScope())
+    scope.ServiceProvider.GetRequiredService<AppDbContext>().Database.Migrate();
+
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
-if (app.Environment.IsDevelopment())
+app.UseSwagger();
+app.UseSwaggerUI(options =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(options =>
-    {
-        options.SwaggerEndpoint("/swagger/v1/swagger.json", "AnimeQuizTrainer API v1");
-        options.RoutePrefix = "swagger";
-    });
-}
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "AnimeQuizTrainer API v1");
+    options.RoutePrefix = "swagger";
+});
 
 app.UseHttpsRedirection();
 app.UseCors("AllowFrontend");
