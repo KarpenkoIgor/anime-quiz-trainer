@@ -1,4 +1,4 @@
-import { ITag } from '../anime.type'
+import { ITag } from './tag.type'
 import API from '@/service/api'
 import { http } from '@/service/httpService'
 import { FilterRequestDto } from '@/types/filterRequestDto'
