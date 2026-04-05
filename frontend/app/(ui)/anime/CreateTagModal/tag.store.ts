@@ -1,4 +1,4 @@
-import { makeAutoObservable } from 'mobx';
+import { makeAutoObservable, runInAction } from 'mobx'; // 🔑 Импортируем runInAction
 import { ITag } from '../anime.type';
 import { tagService } from './tag.service';
 import { FilterRequestDto } from '@/types/filterRequestDto';
@@ -20,15 +20,23 @@ class TagStore {
   filter: FilterRequestDto = { ...defaultFilter };
 
   getTagList = async () => {
+    // 🔑 Синхронные мутации до await работают внутри action автоматически
     this.isLoading = true;
     try {
       const data = await tagService.getTagList(this.filter);
-      this.tagList = data.items;
-      this.totalCount = data.totalCount;
+      
+      // 🔑 После await оборачиваем мутации в runInAction
+      runInAction(() => {
+        this.tagList = data.items;
+        this.totalCount = data.totalCount;
+      });
     } catch (e) {
       console.error('❌ Failed to fetch tags:', e);
     } finally {
-      this.isLoading = false;
+      // 🔑 finally тоже после await → нужна обёртка
+      runInAction(() => {
+        this.isLoading = false;
+      });
     }
   };
 
@@ -36,12 +44,14 @@ class TagStore {
     this.isLoading = true;
     try {
       await tagService.createTag(name);
-      await this.getTagList(); 
+      await this.getTagList(); // getTagList уже содержит runInAction внутри
     } catch (e) {
       console.error('❌ Failed to create tag:', e);
-      throw e; 
+      throw e;
     } finally {
-      this.isLoading = false;
+      runInAction(() => {
+        this.isLoading = false;
+      });
     }
   };
 
@@ -54,7 +64,9 @@ class TagStore {
       console.error('❌ Failed to update tag:', e);
       throw e;
     } finally {
-      this.isLoading = false;
+      runInAction(() => {
+        this.isLoading = false;
+      });
     }
   };
 
@@ -67,10 +79,13 @@ class TagStore {
       console.error('❌ Failed to delete tag:', e);
       throw e;
     } finally {
-      this.isLoading = false;
+      runInAction(() => {
+        this.isLoading = false;
+      });
     }
   };
 
+  // 🔑 Синхронные методы НЕ требуют runInAction (makeAutoObservable сам оборачивает их)
   setFilter = (newFilter: FilterRequestDto) => {
     this.filter = { ...this.filter, ...newFilter };
   };
