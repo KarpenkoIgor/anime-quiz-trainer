@@ -7,6 +7,5 @@ public class Franchise
     public string? NameEn { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-    public List<Series> Series { get; set; } = [];
     public List<Anime> Animes { get; set; } = [];
 }
