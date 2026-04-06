@@ -6,8 +6,8 @@ namespace AnimeQuizTrainer.Infrastructure.Data;
 public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
     public DbSet<Franchise> Franchises => Set<Franchise>();
-    public DbSet<Series> Series => Set<Series>();
     public DbSet<Anime> Animes => Set<Anime>();
+    public DbSet<AnimeEntry> AnimeEntries => Set<AnimeEntry>();
     public DbSet<Tag> Tags => Set<Tag>();
     public DbSet<AnimeTag> AnimeTags => Set<AnimeTag>();
     public DbSet<Artist> Artists => Set<Artist>();

@@ -6,8 +6,8 @@ public class Opening
 {
     public Guid Id { get; set; } = Guid.NewGuid();
 
-    public Guid AnimeId { get; set; }
-    public Anime Anime { get; set; } = null!;
+    public Guid AnimeEntryId { get; set; }
+    public AnimeEntry AnimeEntry { get; set; } = null!;
 
     public Guid ArtistId { get; set; }
     public Artist Artist { get; set; } = null!;
@@ -15,7 +15,7 @@ public class Opening
     public string SongTitle { get; set; } = string.Empty;
     public string YoutubeUrl { get; set; } = string.Empty;
 
-    /// <summary>Opening number for this anime (OP1, OP2, ...)</summary>
+    /// <summary>Opening number for this entry (OP1, OP2, ...)</summary>
     public int OrderNumber { get; set; }
 
     public Difficulty Difficulty { get; set; }

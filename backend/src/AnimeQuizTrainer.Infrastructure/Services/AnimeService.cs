@@ -10,15 +10,14 @@ namespace AnimeQuizTrainer.Infrastructure.Services;
 public class AnimeService(
     IAnimeRepository animes,
     IFranchiseRepository franchises,
-    ISeriesRepository seriesRepo,
     ITagRepository tags,
     IUnitOfWork uow) : IAnimeService
 {
     public async Task<PagedResult<AnimeDto>> GetListAsync(
-        Guid? franchiseId, Guid? seriesId, string? filterText, string? sorting,
+        Guid? franchiseId, string? filterText, string? sorting,
         int skipCount, int maxResultCount, CancellationToken ct = default)
     {
-        var (items, total) = await animes.GetPagedAsync(franchiseId, seriesId, filterText, sorting, skipCount, maxResultCount, ct);
+        var (items, total) = await animes.GetPagedAsync(franchiseId, filterText, sorting, skipCount, maxResultCount, ct);
         return new PagedResult<AnimeDto>(total, items.Select(ToDto));
     }
 
@@ -31,21 +30,15 @@ public class AnimeService(
 
     public async Task<AnimeDto> CreateAsync(CreateAnimeRequest request, CancellationToken ct = default)
     {
-        _ = await franchises.GetByIdAsync(request.FranchiseId, ct)
-            ?? throw new KeyNotFoundException($"Franchise {request.FranchiseId} not found.");
-
-        if (request.SeriesId.HasValue)
-            _ = await seriesRepo.GetByIdAsync(request.SeriesId.Value, ct)
-                ?? throw new KeyNotFoundException($"Series {request.SeriesId} not found.");
+        if (request.FranchiseId.HasValue)
+            _ = await franchises.GetByIdAsync(request.FranchiseId.Value, ct)
+                ?? throw new KeyNotFoundException($"Franchise {request.FranchiseId} not found.");
 
         var anime = new Anime
         {
             Title = request.Title,
             TitleEn = request.TitleEn,
-            FranchiseId = request.FranchiseId,
-            SeriesId = request.SeriesId,
-            Type = request.Type,
-            SeasonNumber = request.SeasonNumber
+            FranchiseId = request.FranchiseId
         };
 
         if (request.TagIds?.Count > 0)
@@ -56,7 +49,6 @@ public class AnimeService(
 
         await animes.AddAsync(anime, ct);
         await uow.SaveChangesAsync(ct);
-
         return await GetByIdAsync(anime.Id, ct);
     }
 
@@ -65,20 +57,13 @@ public class AnimeService(
         var anime = await animes.GetByIdWithTagsAsync(id, ct)
             ?? throw new KeyNotFoundException($"Anime {id} not found.");
 
-        if (anime.FranchiseId != request.FranchiseId)
-            _ = await franchises.GetByIdAsync(request.FranchiseId, ct)
+        if (request.FranchiseId.HasValue && request.FranchiseId != anime.FranchiseId)
+            _ = await franchises.GetByIdAsync(request.FranchiseId.Value, ct)
                 ?? throw new KeyNotFoundException($"Franchise {request.FranchiseId} not found.");
-
-        if (request.SeriesId.HasValue && request.SeriesId != anime.SeriesId)
-            _ = await seriesRepo.GetByIdAsync(request.SeriesId.Value, ct)
-                ?? throw new KeyNotFoundException($"Series {request.SeriesId} not found.");
 
         anime.Title = request.Title;
         anime.TitleEn = request.TitleEn;
         anime.FranchiseId = request.FranchiseId;
-        anime.SeriesId = request.SeriesId;
-        anime.Type = request.Type;
-        anime.SeasonNumber = request.SeasonNumber;
         anime.AnimeTags.Clear();
 
         if (request.TagIds?.Count > 0)
@@ -89,7 +74,6 @@ public class AnimeService(
 
         animes.Update(anime);
         await uow.SaveChangesAsync(ct);
-
         return await GetByIdAsync(anime.Id, ct);
     }
 
@@ -102,9 +86,8 @@ public class AnimeService(
     }
 
     private static AnimeDto ToDto(Anime a) => new(
-        a.Id, a.Title, a.TitleEn, a.Type, a.SeasonNumber,
-        a.FranchiseId, a.Franchise.Name,
-        a.SeriesId, a.Series?.Name,
+        a.Id, a.Title, a.TitleEn,
+        a.FranchiseId, a.Franchise?.Name,
         a.CreatedAt,
         a.AnimeTags.Select(at => new TagDto(at.Tag.Id, at.Tag.Name)).ToList());
 }

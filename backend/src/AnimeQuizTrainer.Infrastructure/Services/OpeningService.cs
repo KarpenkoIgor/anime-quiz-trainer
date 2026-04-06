@@ -9,7 +9,7 @@ namespace AnimeQuizTrainer.Infrastructure.Services;
 
 public class OpeningService(
     IOpeningRepository openings,
-    IAnimeRepository animes,
+    IAnimeEntryRepository entries,
     IArtistRepository artists,
     IUnitOfWork uow) : IOpeningService
 {
@@ -27,23 +27,23 @@ public class OpeningService(
         return ToDto(opening);
     }
 
-    public async Task<PagedResult<OpeningDto>> GetListByAnimeIdAsync(
-        Guid animeId, string? filterText, string? sorting, int skipCount, int maxResultCount, CancellationToken ct = default)
+    public async Task<PagedResult<OpeningDto>> GetListByAnimeEntryIdAsync(
+        Guid animeEntryId, string? filterText, string? sorting, int skipCount, int maxResultCount, CancellationToken ct = default)
     {
-        var (items, total) = await openings.GetPagedByAnimeIdAsync(animeId, filterText, sorting, skipCount, maxResultCount, ct);
+        var (items, total) = await openings.GetPagedByAnimeEntryIdAsync(animeEntryId, filterText, sorting, skipCount, maxResultCount, ct);
         return new PagedResult<OpeningDto>(total, items.Select(ToDto));
     }
 
     public async Task<OpeningDto> CreateAsync(CreateOpeningRequest request, CancellationToken ct = default)
     {
-        _ = await animes.GetByIdAsync(request.AnimeId, ct)
-            ?? throw new KeyNotFoundException($"Anime {request.AnimeId} not found.");
+        _ = await entries.GetByIdAsync(request.AnimeEntryId, ct)
+            ?? throw new KeyNotFoundException($"AnimeEntry {request.AnimeEntryId} not found.");
         _ = await artists.GetByIdAsync(request.ArtistId, ct)
             ?? throw new KeyNotFoundException($"Artist {request.ArtistId} not found.");
 
         var opening = new Opening
         {
-            AnimeId = request.AnimeId,
+            AnimeEntryId = request.AnimeEntryId,
             ArtistId = request.ArtistId,
             SongTitle = request.SongTitle,
             YoutubeUrl = request.YoutubeUrl,
@@ -91,8 +91,10 @@ public class OpeningService(
 
     public static OpeningDto ToDto(Opening o) => new(
         o.Id,
-        o.AnimeId,
-        o.Anime.Title,
+        o.AnimeEntryId,
+        o.AnimeEntry.Title,
+        o.AnimeEntry.AnimeId,
+        o.AnimeEntry.Anime.Title,
         new ArtistDto(o.Artist.Id, o.Artist.Name),
         o.SongTitle,
         o.YoutubeUrl,

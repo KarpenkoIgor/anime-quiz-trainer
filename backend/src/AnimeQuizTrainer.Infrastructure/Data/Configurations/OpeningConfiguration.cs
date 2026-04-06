@@ -13,9 +13,9 @@ public class OpeningConfiguration : IEntityTypeConfiguration<Opening>
         builder.Property(o => o.YoutubeUrl).IsRequired().HasMaxLength(512);
         builder.Property(o => o.Difficulty).HasConversion<string>();
 
-        builder.HasOne(o => o.Anime)
-            .WithMany(a => a.Openings)
-            .HasForeignKey(o => o.AnimeId)
+        builder.HasOne(o => o.AnimeEntry)
+            .WithMany(e => e.Openings)
+            .HasForeignKey(o => o.AnimeEntryId)
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne(o => o.Artist)
@@ -23,6 +23,6 @@ public class OpeningConfiguration : IEntityTypeConfiguration<Opening>
             .HasForeignKey(o => o.ArtistId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasIndex(o => new { o.AnimeId, o.OrderNumber }).IsUnique();
+        builder.HasIndex(o => new { o.AnimeEntryId, o.OrderNumber }).IsUnique();
     }
 }

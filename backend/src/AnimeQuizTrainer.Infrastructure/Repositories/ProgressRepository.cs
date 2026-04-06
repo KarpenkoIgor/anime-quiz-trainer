@@ -9,7 +9,7 @@ public class ProgressRepository(AppDbContext db) : IProgressRepository
 {
     private IQueryable<UserOpeningProgress> WithIncludes() =>
         db.UserOpeningProgresses
-            .Include(p => p.Opening).ThenInclude(o => o.Anime)
+            .Include(p => p.Opening).ThenInclude(o => o.AnimeEntry).ThenInclude(e => e.Anime)
             .Include(p => p.Opening).ThenInclude(o => o.Artist);
 
     public async Task<UserOpeningProgress?> GetAsync(Guid userId, Guid openingId, CancellationToken ct = default) =>

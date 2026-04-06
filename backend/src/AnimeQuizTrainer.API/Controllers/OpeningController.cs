@@ -29,17 +29,17 @@ public class OpeningController(IOpeningService openingService) : ControllerBase
     public async Task<IActionResult> GetById(Guid id, CancellationToken ct) =>
         Ok(await openingService.GetByIdAsync(id, ct));
 
-    /// <summary>Get a paged list of openings for a specific anime.</summary>
-    [HttpGet("by-anime/{animeId:guid}")]
+    /// <summary>Get a paged list of openings for a specific anime entry.</summary>
+    [HttpGet("by-anime-entry/{animeEntryId:guid}")]
     [ProducesResponseType(typeof(PagedResult<OpeningDto>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetListByAnime(
-        Guid animeId,
+    public async Task<IActionResult> GetListByAnimeEntry(
+        Guid animeEntryId,
         [FromQuery] string? filterText,
         [FromQuery] string? sorting,
         [FromQuery] int skipCount = 0,
         [FromQuery] int maxResultCount = 10,
         CancellationToken ct = default) =>
-        Ok(await openingService.GetListByAnimeIdAsync(animeId, filterText, sorting, skipCount, maxResultCount, ct));
+        Ok(await openingService.GetListByAnimeEntryIdAsync(animeEntryId, filterText, sorting, skipCount, maxResultCount, ct));
 
     /// <summary>Create an opening (admin only).</summary>
     [Authorize]

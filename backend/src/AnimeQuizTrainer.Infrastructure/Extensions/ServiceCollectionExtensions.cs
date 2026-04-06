@@ -20,8 +20,8 @@ public static class ServiceCollectionExtensions
 
         // Repositories
         services.AddScoped<IFranchiseRepository, FranchiseRepository>();
-        services.AddScoped<ISeriesRepository, SeriesRepository>();
         services.AddScoped<IAnimeRepository, AnimeRepository>();
+        services.AddScoped<IAnimeEntryRepository, AnimeEntryRepository>();
         services.AddScoped<IOpeningRepository, OpeningRepository>();
         services.AddScoped<IArtistRepository, ArtistRepository>();
         services.AddScoped<ITagRepository, TagRepository>();
@@ -33,8 +33,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<JwtService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IFranchiseService, FranchiseService>();
-        services.AddScoped<ISeriesService, SeriesService>();
         services.AddScoped<IAnimeService, AnimeService>();
+        services.AddScoped<IAnimeEntryService, AnimeEntryService>();
         services.AddScoped<IOpeningService, OpeningService>();
         services.AddScoped<IArtistService, ArtistService>();
         services.AddScoped<ITagService, TagService>();

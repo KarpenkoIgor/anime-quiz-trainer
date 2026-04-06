@@ -4,7 +4,7 @@ using AnimeQuizTrainer.Domain.Enums;
 namespace AnimeQuizTrainer.Application.DTOs.Opening;
 
 public record CreateOpeningRequest(
-    [Required] Guid AnimeId,
+    [Required] Guid AnimeEntryId,
     [Required] Guid ArtistId,
     [Required, MaxLength(256)] string SongTitle,
     [Required, Url] string YoutubeUrl,

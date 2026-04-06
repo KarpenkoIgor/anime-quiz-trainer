@@ -8,20 +8,16 @@ namespace AnimeQuizTrainer.Infrastructure.Repositories;
 public class AnimeRepository(AppDbContext db) : IAnimeRepository
 {
     public async Task<(IEnumerable<Anime> Items, int TotalCount)> GetPagedAsync(
-        Guid? franchiseId, Guid? seriesId, string? filterText, string? sorting,
+        Guid? franchiseId, string? filterText, string? sorting,
         int skipCount, int maxResultCount, CancellationToken ct = default)
     {
         var query = db.Animes
             .Include(a => a.Franchise)
-            .Include(a => a.Series)
             .Include(a => a.AnimeTags).ThenInclude(at => at.Tag)
             .AsQueryable();
 
         if (franchiseId.HasValue)
             query = query.Where(a => a.FranchiseId == franchiseId.Value);
-
-        if (seriesId.HasValue)
-            query = query.Where(a => a.SeriesId == seriesId.Value);
 
         if (!string.IsNullOrWhiteSpace(filterText))
             query = query.Where(a => a.Title.Contains(filterText) || (a.TitleEn != null && a.TitleEn.Contains(filterText)));
@@ -48,7 +44,6 @@ public class AnimeRepository(AppDbContext db) : IAnimeRepository
     public async Task<Anime?> GetByIdWithTagsAsync(Guid id, CancellationToken ct = default) =>
         await db.Animes
             .Include(a => a.Franchise)
-            .Include(a => a.Series)
             .Include(a => a.AnimeTags).ThenInclude(at => at.Tag)
             .FirstOrDefaultAsync(a => a.Id == id, ct);
 

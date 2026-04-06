@@ -5,6 +5,8 @@ namespace AnimeQuizTrainer.Application.DTOs.Opening;
 
 public record OpeningDto(
     Guid Id,
+    Guid AnimeEntryId,
+    string AnimeEntryTitle,
     Guid AnimeId,
     string AnimeTitle,
     ArtistDto Artist,

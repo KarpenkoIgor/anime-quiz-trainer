@@ -5,7 +5,7 @@ namespace AnimeQuizTrainer.Application.Interfaces;
 public interface IAnimeRepository
 {
     Task<(IEnumerable<Anime> Items, int TotalCount)> GetPagedAsync(
-        Guid? franchiseId, Guid? seriesId, string? filterText, string? sorting,
+        Guid? franchiseId, string? filterText, string? sorting,
         int skipCount, int maxResultCount, CancellationToken ct = default);
     Task<Anime?> GetByIdAsync(Guid id, CancellationToken ct = default);
     Task<Anime?> GetByIdWithTagsAsync(Guid id, CancellationToken ct = default);
