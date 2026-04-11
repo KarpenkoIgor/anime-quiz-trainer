@@ -24,7 +24,7 @@ class AnimeService {
   }
 
   updateAnime = async (data: IAnimeDto, id: string): Promise<IAnime> => {
-    const result = await http.post<IAnime>(`${API.Anime}${id}`, data)
+    const result = await http.put<IAnime>(`${API.Anime}${id}`, data)
 
     return result
   }

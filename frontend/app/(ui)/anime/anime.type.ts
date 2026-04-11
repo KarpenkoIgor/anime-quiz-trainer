@@ -4,7 +4,8 @@ import { ITag } from './CreateTagModal/tag.type'
 export interface IAnime extends IAnimeDto {
   id: string,
   createdAt: Date,
-  tags: ITag[]
+  tags: ITag[],
+  franchiseName?: string,
 }
 
 export interface IAction {
@@ -17,4 +18,5 @@ export interface IAnimeDto {
   title: string,
   titleEn: string,
   tagIds?: string[]
+  franchiseId?: string
 }
