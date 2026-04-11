@@ -9,4 +9,10 @@ export default class API {
   static Anime = 'api/anime/'
 
   static Tag = 'api/tag/'
+
+  static AnimeEntry = 'api/animeentry/'
+  
+  static Artist = 'api/artist/'
+
+  static Song = 'api/song/'
 }

@@ -67,8 +67,9 @@ class AnimeStore {
   updateAnime = async (dto: IAnimeDto, id: string) => {
     this.isLoading = true;
     try {
-      await animeService.updateAnime(dto, id);
-      await this.getAnimeList();
+      const updated = await animeService.updateAnime(dto, id);
+
+      this.currentAnime = updated
     } catch (e) {
       console.error('❌ Failed to update anime:', e);
       throw e;
