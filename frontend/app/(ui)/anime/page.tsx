@@ -12,7 +12,7 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import HdrAutoIcon from '@mui/icons-material/HdrAuto';
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
-import { SearchField } from '../components/SearchBar';
+import { SearchField } from '../{components}/SearchBar';
 import { animeStore } from './anime.store';
 import { IAction } from './anime.type';
 import CreateAnimeModal from './CreateAnimeModal';
