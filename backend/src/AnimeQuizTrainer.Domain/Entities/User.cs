@@ -13,5 +13,5 @@ public class User
     public long QuizPosition { get; set; }
 
     public List<RefreshToken> RefreshTokens { get; set; } = [];
-    public List<UserOpeningProgress> OpeningProgresses { get; set; } = [];
+    public List<UserSongProgress> SongProgresses { get; set; } = [];
 }

@@ -20,11 +20,11 @@ public class ProgressService(
         return new UserProgressSummaryDto(all.Count, availableNow, neverReviewed);
     }
 
-    public async Task<IEnumerable<OpeningProgressDto>> GetOpeningsProgressAsync(Guid userId, CancellationToken ct = default)
+    public async Task<IEnumerable<SongProgressDto>> GetSongsProgressAsync(Guid userId, CancellationToken ct = default)
     {
         var all = await progress.GetAllByUserAsync(userId, ct);
-        return all.Select(p => new OpeningProgressDto(
-            OpeningService.ToDto(p.Opening),
+        return all.Select(p => new SongProgressDto(
+            SongService.ToDto(p.Song),
             p.GapSize,
             p.EaseFactor,
             p.ReviewCount,

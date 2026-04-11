@@ -1,7 +1,7 @@
 namespace AnimeQuizTrainer.Application.DTOs.Quiz;
 
 public record ReviewResponse(
-    Guid OpeningId,
+    Guid SongId,
     int NewGapSize,
     long NextShowPosition
 );

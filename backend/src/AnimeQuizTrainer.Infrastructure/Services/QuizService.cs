@@ -7,7 +7,7 @@ using AnimeQuizTrainer.Domain.Enums;
 namespace AnimeQuizTrainer.Infrastructure.Services;
 
 public class QuizService(
-    IOpeningRepository openings,
+    ISongRepository songs,
     IProgressRepository progress,
     IUserRepository users,
     IUnitOfWork uow) : IQuizService
@@ -30,20 +30,20 @@ public class QuizService(
             user.QuizPosition++;
             users.Update(user);
             await uow.SaveChangesAsync(ct);
-            return new LearnNextResponse(OpeningService.ToDto(available.Opening), IsNew: false, available.ReviewCount);
+            return new LearnNextResponse(SongService.ToDto(available.Song), IsNew: false, available.ReviewCount);
         }
 
-        // 2. New openings (no progress record yet)
-        var trackedIds = allProgress.Select(p => p.OpeningId).ToHashSet();
-        var allOpenings = await openings.GetAllAsync(ct);
-        var newOpening = allOpenings.FirstOrDefault(o => !trackedIds.Contains(o.Id));
+        // 2. New songs (no progress record yet)
+        var trackedIds = allProgress.Select(p => p.SongId).ToHashSet();
+        var allSongs = await songs.GetAllAsync(ct);
+        var newSong = allSongs.FirstOrDefault(s => !trackedIds.Contains(s.Id));
 
-        if (newOpening is not null)
+        if (newSong is not null)
         {
             user.QuizPosition++;
             users.Update(user);
             await uow.SaveChangesAsync(ct);
-            return new LearnNextResponse(OpeningService.ToDto(newOpening), IsNew: true, ReviewCount: 0);
+            return new LearnNextResponse(SongService.ToDto(newSong), IsNew: true, ReviewCount: 0);
         }
 
         // 3. Fallback: everything on cooldown — pick the soonest to become available
@@ -52,24 +52,24 @@ public class QuizService(
             .ThenBy(p => p.EaseFactor)
             .FirstOrDefault();
 
-        if (soonest is null) return null; // no openings in the database at all
+        if (soonest is null) return null; // no songs in the database at all
 
         user.QuizPosition++;
         users.Update(user);
         await uow.SaveChangesAsync(ct);
-        return new LearnNextResponse(OpeningService.ToDto(soonest.Opening), IsNew: false, soonest.ReviewCount);
+        return new LearnNextResponse(SongService.ToDto(soonest.Song), IsNew: false, soonest.ReviewCount);
     }
 
     public async Task<ReviewResponse> SubmitReviewAsync(Guid userId, ReviewRequest request, CancellationToken ct = default)
     {
-        var record = await progress.GetAsync(userId, request.OpeningId, ct);
+        var record = await progress.GetAsync(userId, request.SongId, ct);
 
         if (record is null)
         {
-            record = new UserOpeningProgress
+            record = new UserSongProgress
             {
                 UserId = userId,
-                OpeningId = request.OpeningId
+                SongId = request.SongId
             };
             await progress.AddAsync(record, ct);
         }
@@ -77,8 +77,8 @@ public class QuizService(
         var user = await users.GetByIdAsync(userId, ct)
             ?? throw new InvalidOperationException("User not found.");
 
-        int totalOpenings = await openings.CountAsync(ct);
-        ApplyReview(record, request.Quality, totalOpenings);
+        int totalSongs = await songs.CountAsync(ct);
+        ApplyReview(record, request.Quality, totalSongs);
         record.ReviewCount++;
 
         // NextShowPosition = current position + gap (the position increment for this review
@@ -88,36 +88,37 @@ public class QuizService(
         progress.Update(record);
         await uow.SaveChangesAsync(ct);
 
-        return new ReviewResponse(request.OpeningId, record.GapSize, record.NextShowPosition.Value);
+        return new ReviewResponse(request.SongId, record.GapSize, record.NextShowPosition.Value);
     }
 
     public async Task<TestStartResponse> StartTestAsync(TestStartRequest request, CancellationToken ct = default)
     {
-        var filtered = await openings.GetFilteredAsync(
+        var filtered = await songs.GetFilteredAsync(
             request.Difficulties,
             request.TagIds,
+            request.SongTypes,
             request.Count,
             ct);
 
-        var items = filtered.Select(o =>
+        var items = filtered.Select(s =>
         {
             var startAt = request.StartFrom switch
             {
-                StartFrom.Chorus    => o.ChorusTiming,
-                StartFrom.Beginning => o.StartTiming ?? 0,
-                StartFrom.Random    => PickRandomStart(o),
+                StartFrom.Chorus    => s.ChorusTiming,
+                StartFrom.Beginning => s.StartTiming ?? 0,
+                StartFrom.Random    => PickRandomStart(s),
                 _                   => 0
             };
-            return new TestOpeningItem(OpeningService.ToDto(o), startAt);
+            return new TestSongItem(SongService.ToDto(s), startAt);
         }).ToList();
 
         return new TestStartResponse(items, request.StartFrom, request.SegmentSeconds);
     }
 
     // Position-based spaced repetition with EaseFactor
-    // GapSize = how many other openings must be shown before this one reappears
-    // Coefficients are relative to N (total openings in the database)
-    private static void ApplyReview(UserOpeningProgress record, ReviewQuality quality, int N)
+    // GapSize = how many other songs must be shown before this one reappears
+    // Coefficients are relative to N (total songs in the database)
+    private static void ApplyReview(UserSongProgress record, ReviewQuality quality, int N)
     {
         switch (quality)
         {
@@ -146,11 +147,11 @@ public class QuizService(
         }
     }
 
-    private static double PickRandomStart(Opening o)
+    private static double PickRandomStart(Song s)
     {
         var options = new List<double>();
-        if (o.StartTiming.HasValue) options.Add(o.StartTiming.Value);
-        options.Add(o.ChorusTiming);
+        if (s.StartTiming.HasValue) options.Add(s.StartTiming.Value);
+        options.Add(s.ChorusTiming);
         return options[Random.Shared.Next(options.Count)];
     }
 }

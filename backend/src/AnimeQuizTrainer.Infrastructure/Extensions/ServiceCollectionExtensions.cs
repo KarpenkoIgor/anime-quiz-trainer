@@ -22,7 +22,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IFranchiseRepository, FranchiseRepository>();
         services.AddScoped<IAnimeRepository, AnimeRepository>();
         services.AddScoped<IAnimeEntryRepository, AnimeEntryRepository>();
-        services.AddScoped<IOpeningRepository, OpeningRepository>();
+        services.AddScoped<ISongRepository, SongRepository>();
         services.AddScoped<IArtistRepository, ArtistRepository>();
         services.AddScoped<ITagRepository, TagRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
@@ -35,7 +35,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IFranchiseService, FranchiseService>();
         services.AddScoped<IAnimeService, AnimeService>();
         services.AddScoped<IAnimeEntryService, AnimeEntryService>();
-        services.AddScoped<IOpeningService, OpeningService>();
+        services.AddScoped<ISongService, SongService>();
         services.AddScoped<IArtistService, ArtistService>();
         services.AddScoped<ITagService, TagService>();
         services.AddScoped<IQuizService, QuizService>();

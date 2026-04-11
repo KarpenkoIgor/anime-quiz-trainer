@@ -1,4 +1,4 @@
-using AnimeQuizTrainer.Application.DTOs.Opening;
+using AnimeQuizTrainer.Application.DTOs.Song;
 
 namespace AnimeQuizTrainer.Application.DTOs.Progress;
 
@@ -8,8 +8,8 @@ public record UserProgressSummaryDto(
     int NeverReviewed
 );
 
-public record OpeningProgressDto(
-    OpeningDto Opening,
+public record SongProgressDto(
+    SongDto Song,
     int GapSize,
     double EaseFactor,
     int ReviewCount,
