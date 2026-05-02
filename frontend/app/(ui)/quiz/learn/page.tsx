@@ -108,7 +108,7 @@ const Learn: FC = () => {
   const handlePlayFromChorus = useCallback(() => playSnippet(songData?.chorusTiming || 0), [playSnippet, songData]);
 
   const handlePlayRandom = useCallback(() => {
-    const max = songData?.startTiming || 30000;
+    const max = songData?.startTiming || 90;
     const randomMs = Math.floor(Math.random() * max);
     playSnippet(randomMs);
   }, [playSnippet, songData]);
@@ -244,7 +244,7 @@ const Learn: FC = () => {
         <Box sx={{ display: 'flex', gap: 1, justifyContent: 'center', mb: 3, flexWrap: 'wrap' }}>
           <Button size="small" startIcon={<PlayArrowIcon />} onClick={handlePlayFromStart} disabled={!songData.youtubeUrl}>С начала</Button>
           <Button size="small" startIcon={<SkipNextIcon />} onClick={handlePlayFromChorus} disabled={!songData.chorusTiming}>С припева</Button>
-          <Button size="small" startIcon={<ShuffleIcon />} onClick={handlePlayRandom} disabled={!songData.startTiming}>Рандом</Button>
+          <Button size="small" startIcon={<ShuffleIcon />} onClick={handlePlayRandom} disabled={!songData.youtubeUrl}>Рандом</Button>
         </Box>
       )}
 
@@ -254,7 +254,7 @@ const Learn: FC = () => {
         <Slider
           size="small"
           value={snippetDuration / 1000}
-          min={2}
+          min={1}
           max={15}
           step={1}
           onChange={(_, v) => setSnippetDuration((v as number) * 1000)}
