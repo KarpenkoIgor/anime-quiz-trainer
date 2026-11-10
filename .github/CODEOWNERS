@@ -1,0 +1,9 @@
+# Default owners for everything in the repo.
+# Replace/extend with teams or additional handles as the team grows.
+*                @KarpenkoIgor @Sasor1man
+
+/backend/        @KarpenkoIgor @Sasor1man
+/frontend/       @KarpenkoIgor @Sasor1man
+/docs/           @KarpenkoIgor @Sasor1man
+/.github/        @KarpenkoIgor
+/.claude/        @KarpenkoIgor

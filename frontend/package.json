@@ -6,7 +6,13 @@
     "dev": "next dev --experimental-https --experimental-https-key localhost+2-key.pem --experimental-https-cert localhost+2.pem",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "engines": {
+    "node": ">=20"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -34,6 +40,8 @@
     "@typescript-eslint/parser": "^8.58.0",
     "eslint": "^9",
     "eslint-config-next": "^16.2.2",
-    "typescript": "^5"
+    "prettier": "^3.9.10",
+    "typescript": "^5",
+    "typescript-eslint": "^8.72.2"
   }
 }
