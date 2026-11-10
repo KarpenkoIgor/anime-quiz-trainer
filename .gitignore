@@ -416,3 +416,18 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+# --- Secrets & local data (never commit) ---
+.env
+.env.*
+!.env.example
+*.pem
+*.sql
+*.dump
+*.bak
+**/appsettings.*.local.json
+appsettings.Local.json
+
+# Claude Code: personal settings
+.claude/settings.local.json
+**/.claude/settings.local.json

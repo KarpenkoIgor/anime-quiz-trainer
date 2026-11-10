@@ -32,7 +32,15 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 // ── JWT Authentication ────────────────────────────────────────────────────────
 var jwtSection = builder.Configuration.GetSection("Jwt");
-var secretKey = jwtSection["SecretKey"]!;
+var secretKey = jwtSection["SecretKey"] ?? string.Empty;
+
+// Fail fast outside Development if the signing key is missing, too short or still the placeholder.
+if (!builder.Environment.IsDevelopment()
+    && (secretKey.Length < 32 || secretKey.StartsWith("CHANGE_ME", StringComparison.Ordinal)))
+{
+    throw new InvalidOperationException(
+        "Jwt:SecretKey must be set to a unique value of at least 32 characters (use the Jwt__SecretKey environment variable).");
+}
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
