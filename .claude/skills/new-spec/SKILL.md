@@ -1,16 +1,16 @@
 ---
 name: new-spec
-description: Создаёт спецификацию фичи в docs/specs/ по шаблону — user stories, критерии приёмки, edge cases, декомпозицию. Используй, когда нужно оформить идею или задачу перед разработкой.
-argument-hint: "<краткое описание фичи>"
+description: Creates a feature specification in docs/specs/ from the template — user stories, acceptance criteria, edge cases, task breakdown. Use to formalize an idea or task before development.
+argument-hint: "<short feature description>"
 ---
 
-# /new-spec — спецификация фичи
+# /new-spec — feature specification
 
-Тема: **$ARGUMENTS**
+Topic: **$ARGUMENTS**
 
-1. Если тема не ясна — задай до 3 коротких вопросов. Иначе не задерживай: сформулируй допущения явно.
-2. Прочитай `docs/specs/_template.md` и релевантный код (чтобы описать реальное текущее поведение и влияние).
-3. Делегируй написание агенту `product-analyst` (для механик/рейтинга подключи `game-designer`, для контента аниме — `anime-content-curator`, для квизов — `quiz-designer`), либо напиши сам по шаблону.
-4. Сохрани в `docs/specs/<kebab-case-название>.md` (статус `draft`), заполни все разделы шаблона; неизвестное — в «Открытые вопросы».
-5. Добавь ссылку в `docs/README.md` (если файл существует).
-6. Выведи: путь к файлу, 3–5 ключевых требований, открытые вопросы, предложение декомпозиции на issues. Не начинай реализацию без подтверждения.
+1. If the topic is unclear, ask up to 3 short questions. Otherwise do not stall: state assumptions explicitly.
+2. Read `docs/specs/_template.md` and the relevant code (so the current behavior and impact are described accurately).
+3. Delegate writing to the `product-analyst` agent (for mechanics/rating add `game-designer`, for anime content `anime-content-curator`, for quizzes `quiz-designer`), or write it yourself from the template.
+4. Save to `docs/specs/<kebab-case-name>.md` (status `draft`) and fill every template section; put unknowns under "Open questions". The spec itself is written in Russian (human-facing).
+5. Add a link in `docs/README.md` (if it exists).
+6. Report (in Russian): file path, 3–5 key requirements, open questions, proposed breakdown into issues. Do not start implementation without confirmation.

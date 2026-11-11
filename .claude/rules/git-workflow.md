@@ -1,9 +1,9 @@
 # Git workflow
 
-- Trunk-based: `main` всегда рабочий. Работа — в коротких ветках `feat/<topic>`, `fix/<topic>`, `chore/<topic>`, `docs/<topic>` от `main`; слияние через PR (squash).
-- Коммиты — Conventional Commits: `type(scope): summary` в повелительном наклонении, ≤ 72 символов.
-  Типы: `feat`, `fix`, `refactor`, `perf`, `test`, `docs`, `build`, `ci`, `chore`. Scope: `quiz`, `auth`, `catalog`, `profile`, `api`, `web`, `infra`, `claude`…
-- Один коммит — одна логическая правка; не смешивать форматирование и изменение поведения.
-- Не коммитить в `main`, не использовать `git push --force`, `git reset --hard`, `--no-verify` без явной просьбы пользователя.
-- Не коммитить секреты, дампы БД (`*.sql`, `*.dump`), локальные настройки (`.claude/settings.local.json`, `.env*`).
-- PR описывает **что и зачем**, ссылается на issue (`Closes #N`), содержит план проверки.
+- Trunk-based: `main` is always working. Work in short branches `feat/<topic>`, `fix/<topic>`, `chore/<topic>`, `docs/<topic>` cut from `main`; merge via PR (squash).
+- Commits follow Conventional Commits: `type(scope): summary`, imperative mood, ≤ 72 chars.
+  Types: `feat`, `fix`, `refactor`, `perf`, `test`, `docs`, `build`, `ci`, `chore`. Scopes: `quiz`, `auth`, `catalog`, `profile`, `api`, `web`, `infra`, `claude`, …
+- One commit = one logical change; do not mix formatting with behavior changes.
+- Never commit to `main`; never use `git push --force`, `git reset --hard` or `--no-verify` unless the user explicitly asks.
+- Never commit secrets, DB dumps (`*.sql`, `*.dump`) or local settings (`.claude/settings.local.json`, `.env*`).
+- A PR explains **what and why**, links the issue (`Closes #N`) and contains a verification plan.

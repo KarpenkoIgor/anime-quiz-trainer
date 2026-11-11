@@ -1,12 +1,12 @@
-// PreToolUse (Bash): страж опасных команд.
+// PreToolUse (Bash): guard against dangerous commands.
 //
-// Зачем: CLAUDE.md лишь просит не делать опасного, а хук — гарантирует это.
-// Жёстко запрещаем необратимое/нарушающее процесс, а спорное отдаём человеку (ask).
+// Why: CLAUDE.md only asks Claude not to do dangerous things; a hook guarantees it.
+// Irreversible or process-breaking actions are denied outright, debatable ones go to the human (ask).
 //
-// Блокируем:  force-push, push в main/master, commit прямо в main, --no-verify,
-//             rm -rf от корня/домашней/текущей папки, чтение .env через shell.
-// Спрашиваем: reset --hard, clean -f, checkout -- / restore (откат правок),
-//             dotnet ef database update|drop (применение к БД).
+// Denied:  force-push, push to main/master, commit directly on main, --no-verify,
+//          rm -rf of root/home/current dir, reading .env via shell.
+// Asked:   reset --hard, clean -f, checkout -- / restore (discarding edits),
+//          dotnet ef database update|drop (applying to a DB).
 
 import { ask, currentBranch, deny, readEvent } from './lib.mjs';
 
@@ -14,7 +14,7 @@ const event = readEvent();
 const cmd = String(event.tool_input?.command ?? '');
 if (!cmd) process.exit(0);
 
-// Разбиваем составную команду (a && b; c | d) на простые, чтобы проверять каждую отдельно.
+// Split compound commands (a && b; c | d) into simple ones and check each separately.
 const parts = cmd.split(/&&|\|\||;|\n/).map((s) => s.trim()).filter(Boolean);
 const branch = currentBranch();
 
@@ -23,19 +23,19 @@ for (const part of parts) {
 
   if (isGit && /\bpush\b/.test(part)) {
     if (/(--force\b|--force-with-lease|\s-f(\s|$)|--mirror|\s\+\S)/.test(part)) {
-      deny('git push с force запрещён. Если это действительно нужно — попроси пользователя выполнить вручную.');
+      deny('git push with force is forbidden. If it is truly needed, ask the user to run it manually.');
     }
     if (/\b(main|master)\b/.test(part) || (!/\borigin\s+\S+/.test(part) && ['main', 'master'].includes(branch))) {
-      deny('Прямой push в main/master запрещён (trunk-based: работа в ветке + PR). Создай ветку feat/fix/chore/docs.');
+      deny('Pushing directly to main/master is forbidden (trunk-based: work in a branch + PR). Create a feat/fix/chore/docs branch.');
     }
   }
 
   if (isGit && /\bcommit\b/.test(part) && ['main', 'master'].includes(branch)) {
-    deny(`Коммит прямо в ${branch} запрещён. Создай ветку: git switch -c feat/<тема> (или fix/chore/docs).`);
+    deny(`Committing directly on ${branch} is forbidden. Create a branch first: git switch -c feat/<topic> (or fix/chore/docs).`);
   }
 
   if (isGit && /--no-verify\b/.test(part)) {
-    deny('--no-verify запрещён: не обходим проверки. Исправь причину падения хука.');
+    deny('--no-verify is forbidden: do not bypass checks. Fix the cause of the failing hook instead.');
   }
 
   if (isGit && (/\breset\s+--hard\b/.test(part) || /\bclean\s+-\w*f/.test(part) || /\bcheckout\s+(--\s|\.\s*$)/.test(part) || /\brestore\b(?!\s+--staged)/.test(part))) {
@@ -43,11 +43,11 @@ for (const part of parts) {
   }
 
   if (/\brm\s+-\w*[rR]\w*\s+(-\w+\s+)*(\/|~|\.|\*|\.\/\*)(\s|$)/.test(part)) {
-    deny('rm -r от корня/домашней/текущей папки запрещён. Удаляй конкретные пути.');
+    deny('rm -r on the root/home/current directory is forbidden. Delete specific paths only.');
   }
 
   if (/\b(cat|type|head|tail|less|more|Get-Content|gc)\b[^|><]*\.env(\.[\w-]+)?(\s|$)/.test(part) && !/\.env\.example/.test(part)) {
-    deny('Чтение .env запрещено (секреты). Используй .env.example как образец.');
+    deny('Reading .env is forbidden (secrets). Use .env.example as a template.');
   }
 
   if (/\bdotnet\s+ef\s+database\s+(update|drop)\b/.test(part)) {

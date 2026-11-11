@@ -3,16 +3,16 @@ paths:
   - "backend/src/**/*.cs"
 ---
 
-# Backend: границы слоёв (Clean Architecture)
+# Backend: layer boundaries (Clean Architecture)
 
-Зависимости только внутрь: `API → Infrastructure → Application → Domain`.
+Dependencies point inward only: `API → Infrastructure → Application → Domain`.
 
-- `Domain` не ссылается ни на что (ни EF, ни ASP.NET, ни DI).
-- `Application` не ссылается на `Infrastructure`/`API`, не использует `DbContext`, `HttpContext`, `IConfiguration`. Внешние зависимости — через интерфейсы, объявленные в `Application`.
-- `Infrastructure` реализует интерфейсы `Application`; сущности EF и `AppDbContext` не возвращает наружу репозиториев.
-- `API`: контроллер — только маппинг HTTP ↔ вызов сервиса. Никакой бизнес-логики, никаких обращений к репозиториям/`DbContext`.
-- Новая бизнес-логика — в `Application` (или в сущностях `Domain`, если это инвариант сущности), **даже если соседний старый код лежит в Infrastructure** (это известный долг).
-- Не добавлять `PackageReference` с версией в `.csproj` — версии в `backend/Directory.Packages.props`.
-- Бизнес-ошибки — доменные исключения, не `InvalidOperationException`/`KeyNotFoundException`.
-- Публичные методы сервисов и репозиториев — `async`, с `CancellationToken`, суффикс `Async`.
-- Сущности наружу (в ответы API) не отдавать — только DTO (`record`).
+- `Domain` references nothing (no EF, no ASP.NET, no DI).
+- `Application` must not reference `Infrastructure`/`API` and must not use `DbContext`, `HttpContext` or `IConfiguration`. External dependencies go through interfaces declared in `Application`.
+- `Infrastructure` implements `Application` interfaces; EF entities and `AppDbContext` never leave the repositories.
+- `API`: a controller only maps HTTP ↔ a service call. No business logic, no repository/`DbContext` access.
+- New business logic goes into `Application` (or into `Domain` entities if it is an entity invariant), **even if neighboring legacy code lives in Infrastructure** (known debt).
+- Do not add `PackageReference` with a version to a `.csproj` — versions live in `backend/Directory.Packages.props`.
+- Business errors are domain exceptions, not `InvalidOperationException`/`KeyNotFoundException`.
+- Public service/repository methods are `async`, take a `CancellationToken`, and use the `Async` suffix.
+- Never return entities from the API — only DTOs (`record`).

@@ -1,23 +1,23 @@
 ---
 name: new-feature
-description: Сквозной процесс новой фичи — спека → архитектурный план → тесты → реализация → ревью → документация → PR, с делегированием профильным агентам и контрольными точками подтверждения. Используй для любой нетривиальной фичи.
-argument-hint: "<описание фичи или ссылка на спеку/issue>"
+description: End-to-end feature workflow — spec → architecture plan → tests → implementation → review → docs → PR, delegating to specialist agents with confirmation checkpoints. Use for any non-trivial feature.
+argument-hint: "<feature description or spec/issue link>"
 ---
 
-# /new-feature — фича от идеи до PR
+# /new-feature — a feature from idea to PR
 
-Фича: **$ARGUMENTS**
+Feature: **$ARGUMENTS**
 
-Работай по этапам; на помеченных ⏸ остановись и дождись подтверждения пользователя.
+Work in stages; at those marked ⏸ stop and wait for the user's confirmation. Communicate with the user in Russian.
 
-1. **Ветка.** Убедись, что не на `main`; создай `feat/<kebab-тема>` от актуального `main`.
-2. **Спека.** Есть ли `docs/specs/<фича>.md`? Нет — запусти `/new-spec`. ⏸ Подтвердить спеку.
-3. **План.** Агент `architect`: затронутые слои и файлы, контракты API/DTO, схема БД, риски; нужен ли ADR (`/new-adr`). Для БД — `db-engineer`. ⏸ Подтвердить план.
-4. **Тесты вперёд.** `qa-engineer`: тест-план из критериев приёмки и падающие тесты.
-5. **Реализация.** `backend-dev` и/или `frontend-dev` (независимые части можно параллельно). Миграция — `/db-migration`. Цель — зелёные тесты.
-6. **Проверка.** `/verify`.
-7. **Ревью.** `/review`; blocker/major исправить и повторить `/verify`.
-8. **Документация.** `/sync-docs` (статус спеки → `implemented`, CHANGELOG при необходимости).
-9. **Коммиты и PR.** Коммиты по Conventional Commits, затем `/pr`. ⏸ Подтвердить публикацию.
+1. **Branch.** Make sure you are not on `main`; create `feat/<kebab-topic>` from an up-to-date `main`.
+2. **Spec.** Is there a `docs/specs/<feature>.md`? If not, run `/new-spec`. ⏸ Confirm the spec.
+3. **Plan.** `architect` agent: affected layers and files, API/DTO contracts, DB schema, risks; whether an ADR is needed (`/new-adr`). For the DB involve `db-engineer`. ⏸ Confirm the plan.
+4. **Tests first.** `qa-engineer`: a test plan from the acceptance criteria and failing tests.
+5. **Implementation.** `backend-dev` and/or `frontend-dev` (independent parts may run in parallel). Migration — `/db-migration`. Goal: green tests.
+6. **Verification.** `/verify`.
+7. **Review.** `/review`; fix blocker/major and re-run `/verify`.
+8. **Documentation.** `/sync-docs` (spec status → `implemented`, CHANGELOG if needed).
+9. **Commits and PR.** Conventional Commits, then `/pr`. ⏸ Confirm publication.
 
-Правила: скоуп не расширять; секреты не коммитить; каждый шаг заканчивай короткой сводкой «что сделано / что дальше».
+Rules: do not widen scope; never commit secrets; end every stage with a short "done / next" summary.

@@ -1,20 +1,20 @@
 ---
 name: db-migration
-description: Безопасно создаёт EF Core миграцию для PostgreSQL — генерация, проверка кода и SQL, план отката. Используй при любом изменении сущностей или конфигураций EF, влияющем на схему БД.
-argument-hint: "<ИмяМиграции>"
+description: Safely creates an EF Core migration for PostgreSQL — generation, code/SQL review, rollback plan. Use for any entity or EF configuration change that affects the DB schema.
+argument-hint: "<MigrationName>"
 disable-model-invocation: true
 ---
 
-# /db-migration — миграция схемы
+# /db-migration — schema migration
 
-Имя миграции: **$ARGUMENTS** (PascalCase, глагол+суть, например `AddUserRating`).
+Migration name: **$ARGUMENTS** (PascalCase, verb + subject, e.g. `AddUserRating`).
 
-1. Убедись, что сущности/конфигурации (`Infrastructure/Data/Configurations/`) изменены и `dotnet build backend` проходит.
-2. Сгенерируй:
+1. Make sure the entities/configurations (`Infrastructure/Data/Configurations/`) are changed and `dotnet build backend` passes.
+2. Generate:
    ```bash
    dotnet ef migrations add $ARGUMENTS --project backend/src/AnimeQuizTrainer.Infrastructure --startup-project backend/src/AnimeQuizTrainer.API --output-dir Data/Migrations
    ```
-3. Прочитай созданный файл миграции и проверь (привлеки `db-engineer`): нет ли `DropColumn/DropTable` с потерей данных, NOT NULL без значения по умолчанию, пересоздания вместо `RenameColumn/RenameTable`, лишних изменений снимка.
-4. Покажи пользователю итог проверки и план отката (`dotnet ef migrations remove` для неприменённой; для применённой — новая обратная миграция).
-5. **Не выполняй `dotnet ef database update`.** Применение — только на локальную БД и только после явной просьбы пользователя (хук запросит подтверждение). Никогда на прод.
-6. Миграции и `ModelSnapshot` руками не правятся (хук `guard-files` это блокирует).
+3. Read the generated migration and check it (involve `db-engineer`): no `DropColumn/DropTable` with data loss, no NOT NULL without a default, no drop+create where `RenameColumn/RenameTable` applies, no unrelated snapshot changes.
+4. Show the user the review result and a rollback plan (`dotnet ef migrations remove` for an unapplied migration; a new reverse migration for an applied one). Report in Russian.
+5. **Do not run `dotnet ef database update`.** Applying is only to a local DB and only on the user's explicit request (the hook will ask for confirmation). Never to prod.
+6. Migrations and `ModelSnapshot` are never hand-edited (the `guard-files` hook blocks it).

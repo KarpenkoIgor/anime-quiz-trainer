@@ -1,16 +1,16 @@
 ---
 name: new-adr
-description: Создаёт запись об архитектурном решении (ADR) в docs/adr/ с пронумерованным именем по шаблону. Используй, когда принято или обсуждается значимое техническое решение (слои, хранилище, протокол, библиотека, хостинг).
-argument-hint: "<тема решения>"
+description: Creates an architecture decision record (ADR) in docs/adr/ with a numbered filename from the template. Use when a significant technical decision is made or discussed (layers, storage, protocol, library, hosting).
+argument-hint: "<decision topic>"
 ---
 
-# /new-adr — архитектурное решение
+# /new-adr — architecture decision
 
-Тема: **$ARGUMENTS**
+Topic: **$ARGUMENTS**
 
-1. Определи следующий номер: посмотри файлы `docs/adr/NNNN-*.md`, возьми максимальный + 1 (4 цифры).
-2. Прочитай `docs/adr/0000-template.md` и код/документы по теме — факты, а не догадки.
-3. Привлеки агента `architect` для вариантов и рекомендации (минимум 2 варианта с плюсами/минусами).
-4. Создай `docs/adr/NNNN-<kebab-case>.md`, статус `proposed` (или `accepted`, если решение уже согласовано с пользователем).
-5. Добавь ссылку в `docs/README.md`/индекс ADR, если он есть.
-6. Выведи: номер, решение в одну строку, последствия. Спроси подтверждение статуса `accepted`, если оно не было дано.
+1. Determine the next number: look at `docs/adr/NNNN-*.md`, take the maximum + 1 (4 digits).
+2. Read `docs/adr/0000-template.md` and the code/docs on the topic — facts, not guesses.
+3. Involve the `architect` agent for options and a recommendation (at least 2 options with pros/cons).
+4. Create `docs/adr/NNNN-<kebab-case>.md` with status `proposed` (or `accepted` if the decision was already agreed with the user). The ADR text is written in Russian (human-facing).
+5. Add a link in `docs/README.md`/the ADR index if present.
+6. Report (in Russian): number, the decision in one line, consequences. Ask for confirmation of `accepted` status if it was not given.

@@ -6,14 +6,14 @@ paths:
   - "frontend/Auth/**"
 ---
 
-# Безопасность
+# Security
 
-- Секреты (JWT-ключ, строки подключения, пароли, токены) — только из окружения/user-secrets, никогда в репозитории и логах. В `appsettings.json` допустимы только заведомо локальные dev-значения.
-- Вне Development приложение должно падать на старте при слабом/дефолтном `Jwt:SecretKey` (уже реализовано в `Program.cs`) — не ослаблять эту проверку.
-- Каждый эндпоинт, меняющий данные каталога, требует роли администратора (`[Authorize(Policy = …)]`), а не просто `[Authorize]`.
-- Пользовательский ввод валидируется на границе (DTO + атрибуты/валидаторы); пароли — BCrypt; refresh-токены хранить хешем и ротировать.
-- Не логировать токены, пароли, email целиком, персональные данные.
-- SQL — только через EF/параметры; `FromSqlRaw` с конкатенацией запрещён.
-- CORS — явный список origin из конфигурации, не `*`.
-- Мультиплеер (в перспективе): результат игры определяет сервер; клиенту не доверять очки, время и правильность ответа.
-- Фронтенд: не хранить секреты; токены в `localStorage` — известный компромисс, не расширять их использование.
+- Secrets (JWT key, connection strings, passwords, tokens) come only from the environment/user-secrets and never appear in the repository or logs. `appsettings.json` may contain only clearly local dev values.
+- Outside Development the app must fail at startup on a weak/default `Jwt:SecretKey` (already implemented in `Program.cs`) — do not weaken this check.
+- Every endpoint that mutates catalog data requires the admin role (`[Authorize(Policy = …)]`), not just `[Authorize]`.
+- Validate user input at the boundary (DTO + attributes/validators); passwords use BCrypt; refresh tokens are stored hashed and rotated.
+- Do not log tokens, passwords, full emails or personal data.
+- SQL only through EF/parameters; `FromSqlRaw` with string concatenation is forbidden.
+- CORS uses an explicit origin list from configuration, never `*`.
+- Multiplayer (future): the server decides game results; never trust the client for score, timing or answer correctness.
+- Frontend: no secrets in the bundle; tokens in `localStorage` are a known compromise — do not extend their use.

@@ -1,32 +1,32 @@
 # Backend (.NET 9)
 
-Решение: `backend/AnimeQuizTrainer.sln`, проекты в `backend/src/`:
+Solution: `backend/AnimeQuizTrainer.sln`, projects in `backend/src/`:
 `Domain` ← `Application` ← `Infrastructure` ← `API`.
 
-## Общие настройки сборки
-- `Directory.Build.props` — net9.0, Nullable, **TreatWarningsAsErrors**. Предупреждение = сломанная сборка.
-- `Directory.Packages.props` — версии NuGet-пакетов задаются **только здесь** (central package management); в `.csproj` — `PackageReference` без `Version`.
-- `.editorconfig` в корне — стиль C# (file-scoped namespaces, `_camelCase` для приватных полей, `I`-префикс интерфейсов).
+## Shared build settings
+- `Directory.Build.props` — net9.0, Nullable, **TreatWarningsAsErrors**. A warning breaks the build.
+- `Directory.Packages.props` — NuGet package versions are defined **only here** (central package management); `.csproj` files use `PackageReference` without `Version`.
+- `.editorconfig` in the repo root — C# style (file-scoped namespaces, `_camelCase` private fields, `I` prefix for interfaces).
 
-## Слои и правила
-- Контроллеры тонкие: приём DTO → вызов сервиса → результат. Бизнес-логики и обращений к `DbContext` в них нет.
-- Сервисы (use-cases) — в `Application`, зависят только от интерфейсов (`I*Repository`, `IUnitOfWork`, `ITokenService`…).
-- `Infrastructure` реализует интерфейсы; `AppDbContext` не «протекает» выше репозиториев.
-- DTO — `record`; сущности наружу не отдаём.
-- Ошибки — доменные исключения (цель: `NotFound`, `Conflict`, `Validation`, `Forbidden`) → `ProblemDetails` в одном месте; не бросать `InvalidOperationException` для бизнес-ошибок.
-- Асинхронные методы — суффикс `Async`, принимают `CancellationToken`.
-- Конфигурация — типизированные Options с валидацией при старте, а не `config["…"]!`.
-- Авторизация: изменение каталога (Anime/Song/Artist/Tag/Franchise/AnimeEntry) — только админ.
+## Layers and rules
+- Controllers are thin: accept DTO → call service → return result. No business logic and no `DbContext` access.
+- Services (use cases) live in `Application` and depend only on interfaces (`I*Repository`, `IUnitOfWork`, `ITokenService`, …).
+- `Infrastructure` implements the interfaces; `AppDbContext` must not leak above the repositories.
+- DTOs are `record`s; never expose entities.
+- Errors are domain exceptions (target: `NotFound`, `Conflict`, `Validation`, `Forbidden`) mapped to `ProblemDetails` in one place; do not throw `InvalidOperationException` for business errors.
+- Async methods use the `Async` suffix and take a `CancellationToken`.
+- Configuration is typed Options validated at startup, not `config["…"]!`.
+- Authorization: changing the catalog (Anime/Song/Artist/Tag/Franchise/AnimeEntry) is admin-only.
 
-## Миграции EF Core
+## EF Core migrations
 ```bash
 dotnet ef migrations add <Name> --project backend/src/AnimeQuizTrainer.Infrastructure --startup-project backend/src/AnimeQuizTrainer.API --output-dir Data/Migrations
 ```
-Применённые миграции не редактировать — создать новую. Сгенерированные `*.Designer.cs` и `AppDbContextModelSnapshot.cs` вручную не править.
+Never edit applied migrations — create a new one. Do not hand-edit generated `*.Designer.cs` and `AppDbContextModelSnapshot.cs`.
 
-## Тесты (цель)
-`backend/tests/`: `*.Domain.Tests`, `*.Application.Tests` (xUnit, FluentAssertions, NSubstitute), `*.Api.IntegrationTests` (WebApplicationFactory + Testcontainers PostgreSQL). Имена тестов: `Method_Scenario_ExpectedResult`.
+## Tests (target)
+`backend/tests/`: `*.Domain.Tests`, `*.Application.Tests` (xUnit, FluentAssertions, NSubstitute), `*.Api.IntegrationTests` (WebApplicationFactory + Testcontainers PostgreSQL). Test names: `Method_Scenario_ExpectedResult`.
 
-## Запуск
-`dotnet run --project backend/src/AnimeQuizTrainer.API` → Swagger `http://localhost:5264/swagger`.
-Вне Development приложение не стартует со слабым/дефолтным `Jwt:SecretKey` (нужен env `Jwt__SecretKey`, ≥ 32 символа).
+## Running
+`dotnet run --project backend/src/AnimeQuizTrainer.API` → Swagger at `http://localhost:5264/swagger`.
+Outside Development the app refuses to start with a weak/default `Jwt:SecretKey` (set env `Jwt__SecretKey`, ≥ 32 chars).

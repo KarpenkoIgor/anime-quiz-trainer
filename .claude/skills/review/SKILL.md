@@ -1,14 +1,14 @@
 ---
 name: review
-description: Комплексное ревью текущих изменений — параллельно запускает агентов code-reviewer и security-reviewer и сводит замечания по серьёзности. Используй перед PR или после крупной правки.
-argument-hint: "[ветка/коммит/путь — по умолчанию текущий diff]"
+description: Comprehensive review of current changes — runs the code-reviewer and security-reviewer agents in parallel and merges findings by severity. Use before a PR or after a large change.
+argument-hint: "[branch/commit/path — defaults to the current diff]"
 ---
 
-# /review — ревью изменений
+# /review — change review
 
-Цель ревью: **$ARGUMENTS** (если пусто — незакоммиченные изменения и коммиты ветки относительно `main`).
+Review target: **$ARGUMENTS** (if empty — uncommitted changes and the branch's commits relative to `main`).
 
-1. Определи объём: `git status`, `git diff --stat`, `git diff main...HEAD --stat`. Если изменений нет — сообщи и остановись.
-2. **Параллельно** (одним сообщением) запусти агентов `code-reviewer` и `security-reviewer`, передав им объём изменений и ссылки на `CLAUDE.md` и `.claude/rules/`. Если затронут `frontend/` — упомяни правила фронта; если схема БД — подключи `db-engineer`.
-3. Сведи результаты: уберите дубли, отсортируй по серьёзности (blocker → major → minor → nit), у каждого пункта — `файл:строка` и как исправить.
-4. Выведи итог: вердикт (можно в PR / нужны правки), список blocker/major, затем остальное. Правки не вноси без просьбы пользователя.
+1. Determine the scope: `git status`, `git diff --stat`, `git diff main...HEAD --stat`. If there are no changes, say so and stop.
+2. **In parallel** (one message) launch the `code-reviewer` and `security-reviewer` agents, giving them the change scope and pointing to `CLAUDE.md` and `.claude/rules/`. If `frontend/` is touched, mention the frontend rules; if the DB schema is touched, also involve `db-engineer`.
+3. Merge the results: remove duplicates, sort by severity (blocker → major → minor → nit); each item has `file:line` and a fix.
+4. Report in Russian: verdict (ready for PR / changes needed), blocker/major list, then the rest. Do not make fixes unless the user asks.

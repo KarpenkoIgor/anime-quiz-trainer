@@ -1,11 +1,11 @@
-// Общие утилиты для хуков Claude Code этого проекта.
+// Shared utilities for this project's Claude Code hooks.
 //
-// Как работают хуки: харнесс запускает команду, передаёт JSON события в stdin
-// и смотрит на результат:
-//   - exit 0            -> всё ок (stdout может содержать JSON-решение);
-//   - exit 2            -> блокировка; текст из stderr показывается Claude;
-//   - любой другой код  -> ошибка хука, действие НЕ блокируется.
-// Подробности и примеры: docs/claude/GUIDE.md (раздел «Хуки»).
+// How hooks work: the harness runs a command, passes the event JSON on stdin
+// and inspects the result:
+//   - exit 0            -> fine (stdout may contain a JSON decision);
+//   - exit 2            -> block; the stderr text is shown to Claude;
+//   - any other code    -> hook error, the action is NOT blocked.
+// Details and examples: docs/claude/GUIDE.md (section "Hooks").
 
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
@@ -13,7 +13,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
-/** Читает JSON события из stdin. При пустом/битом вводе возвращает {}. */
+/** Reads the event JSON from stdin. Returns {} on empty/invalid input. */
 export function readEvent() {
   try {
     const raw = readFileSync(0, 'utf8');
@@ -23,13 +23,13 @@ export function readEvent() {
   }
 }
 
-/** Блокирует действие: сообщение уходит Claude, чтобы он выбрал другой путь. */
+/** Blocks the action: the message goes to Claude so it can choose another path. */
 export function deny(message) {
   process.stderr.write(`[hook] ${message}\n`);
   process.exit(2);
 }
 
-/** Просит подтверждение у человека (вместо жёсткого запрета). */
+/** Asks the human for confirmation (instead of a hard block). The reason is shown to the user. */
 export function ask(message) {
   process.stdout.write(
     JSON.stringify({
@@ -43,7 +43,7 @@ export function ask(message) {
   process.exit(0);
 }
 
-/** Запускает git в корне проекта; при ошибке возвращает ''. */
+/** Runs git in the project root; returns '' on error. */
 export function git(args, cwd = projectDir()) {
   try {
     return execFileSync('git', args, { cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
@@ -60,12 +60,12 @@ export function currentBranch() {
   return git(['rev-parse', '--abbrev-ref', 'HEAD']);
 }
 
-/** Нормализует путь: прямые слэши. */
+/** Normalizes a path to forward slashes. */
 export function norm(p = '') {
   return String(p).replace(/\\/g, '/');
 }
 
-/** Небольшое файловое состояние в temp (например, «уже напоминали»). */
+/** Small file-based state in temp (e.g. "already reminded"). */
 function stateFile(name) {
   const dir = join(tmpdir(), 'aqt-claude-hooks');
   if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
@@ -84,7 +84,7 @@ export function writeState(name, value) {
   try {
     writeFileSync(stateFile(name), value);
   } catch {
-    /* состояние необязательно */
+    /* state is optional */
   }
 }
 
