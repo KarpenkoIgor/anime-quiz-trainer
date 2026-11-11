@@ -9,7 +9,7 @@ import { currentBranch, git, readEvent } from './lib.mjs';
 readEvent();
 
 const branch = currentBranch() || '(not a git repository)';
-const status = git(['status', '--porcelain']);
+const status = git(['status', '--porcelain', '--untracked-files=all']);
 const changed = status ? status.split('\n').length : 0;
 const log = git(['log', '--oneline', '-5']);
 

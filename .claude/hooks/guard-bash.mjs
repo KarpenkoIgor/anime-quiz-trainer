@@ -25,7 +25,10 @@ for (const part of parts) {
     if (/(--force\b|--force-with-lease|\s-f(\s|$)|--mirror|\s\+\S)/.test(part)) {
       deny('git push with force is forbidden. If it is truly needed, ask the user to run it manually.');
     }
-    if (/\b(main|master)\b/.test(part) || (!/\borigin\s+\S+/.test(part) && ['main', 'master'].includes(branch))) {
+    // Match main/master only as a whole ref (main, HEAD:main, refs/heads/main, +main), not inside branch names like feat/main-menu.
+    const tokens = part.split(/\s+/);
+    const targetsMain = tokens.some((t) => /^\+?(?:[^\s:]*:)?(?:refs\/heads\/)?(?:main|master)$/.test(t));
+    if (targetsMain || (!/\borigin\s+\S+/.test(part) && ['main', 'master'].includes(branch))) {
       deny('Pushing directly to main/master is forbidden (trunk-based: work in a branch + PR). Create a feat/fix/chore/docs branch.');
     }
   }
