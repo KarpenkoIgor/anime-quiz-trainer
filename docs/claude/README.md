@@ -27,6 +27,7 @@
 | Права | `.claude/settings.json` | Что можно без вопросов, что запрещено |
 | MCP | `.mcp.json` | Внешние инструменты: GitHub, Context7, Playwright |
 | Личные настройки | `.claude/settings.local.json` (в `.gitignore`) | Только для вас, в git не попадает |
+| Статус-строка (по желанию) | `.claude/statusline.mjs` | Модель, заполнение контекста и лимиты 5ч/7д. Включается в `settings.local.json`: `"statusLine": {"type": "command", "command": "node .claude/statusline.mjs"}` |
 
 ## Кого звать (агенты)
 
