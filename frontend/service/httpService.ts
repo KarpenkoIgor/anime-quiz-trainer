@@ -4,7 +4,7 @@ import { authStore } from '@/Auth/auth.store';
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
 class HttpFetch {
-  private baseURL = 'https://anime-quiz-trainer-production.up.railway.app';
+  private baseURL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5264';
   private abortController: AbortController | null = null;
   // private token = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
 

@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 
-COPY AnimeQuizTrainer.sln .
+COPY AnimeQuizTrainer.sln Directory.Build.props Directory.Packages.props ./
 COPY src/AnimeQuizTrainer.Domain/AnimeQuizTrainer.Domain.csproj              src/AnimeQuizTrainer.Domain/
 COPY src/AnimeQuizTrainer.Application/AnimeQuizTrainer.Application.csproj    src/AnimeQuizTrainer.Application/
 COPY src/AnimeQuizTrainer.Infrastructure/AnimeQuizTrainer.Infrastructure.csproj src/AnimeQuizTrainer.Infrastructure/
