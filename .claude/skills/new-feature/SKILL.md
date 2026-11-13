@@ -20,5 +20,6 @@ Work in stages. Stages marked **GATE** are hard stops: do not continue until the
 8. **Review.** `/review`; fix blocker/major and re-run `/verify`.
 9. **Documentation.** `/sync-docs` (spec status → `implemented`, CHANGELOG if needed).
 10. **Commits and PR.** Conventional Commits, then `/pr`. **GATE 4: the user confirms publication.**
+11. **Retro (optional).** After the PR is published, offer `/retro` in one line (what went well, where the user had to correct or redirect, what to improve in rules/agents/skills). Not a gate: if the user declines or does not answer, skip it and do not ask again. Skip the offer for trivial features. Remind that merged branches must be cleaned up (`.claude/rules/git-workflow.md`, "Branch hygiene").
 
 Rules: do not widen scope; never commit secrets; end every stage with a short "done / next" summary; if the user changes requirements mid-way, go back to the spec (stage 2) and re-agree before continuing.
