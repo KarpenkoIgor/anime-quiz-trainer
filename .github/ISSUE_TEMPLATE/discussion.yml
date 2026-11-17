@@ -1,0 +1,19 @@
+name: Discussion topic
+description: A question to discuss and decide first (architecture, game design, product), and only then turn into a spec or ADR
+labels: ["discussion"]
+body:
+  - type: textarea
+    id: question
+    attributes:
+      label: What needs to be agreed
+    validations:
+      required: true
+  - type: textarea
+    id: known
+    attributes:
+      label: What is known and the options
+  - type: textarea
+    id: result
+    attributes:
+      label: How the discussion ends
+      description: For example a spec in docs/specs, an ADR or an entry in docs/ideas.md

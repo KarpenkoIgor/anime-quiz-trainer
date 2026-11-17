@@ -1,0 +1,28 @@
+name: Bug
+description: Something does not work as intended
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you saw and what you expected to see
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: How to reproduce
+      description: Steps in order; which page or endpoint, request body, account
+    validations:
+      required: true
+  - type: input
+    id: env
+    attributes:
+      label: Environment
+      description: Branch or commit, local or deployed, browser
+  - type: textarea
+    id: extra
+    attributes:
+      label: Screenshots, logs
+      description: Do not paste tokens, passwords or connection strings

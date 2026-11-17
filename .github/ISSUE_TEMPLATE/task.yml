@@ -1,0 +1,37 @@
+name: Task
+description: A small vertical task from a spec or plan (one branch, one PR)
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: context
+    attributes:
+      label: Why and what
+      description: One or two sentences in plain words. What the team gets when the task is closed.
+    validations:
+      required: true
+  - type: input
+    id: spec
+    attributes:
+      label: Spec, ADR or notes
+      description: Path in the repository, e.g. docs/specs/backend-refactor.md (AC-3, FR-14)
+    validations:
+      required: true
+  - type: textarea
+    id: done
+    attributes:
+      label: Definition of done
+      description: How to check the task is finished (tests, screen, command). Point by point, from the spec.
+    validations:
+      required: true
+  - type: dropdown
+    id: size
+    attributes:
+      label: Size
+      options: ["S (up to a couple of hours)", "M (up to a day)", "L (several days, consider splitting)"]
+    validations:
+      required: true
+  - type: textarea
+    id: deps
+    attributes:
+      label: Depends on
+      description: Numbers of tasks (#N) that must be done first

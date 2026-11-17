@@ -60,3 +60,4 @@ Details: `backend/CLAUDE.md`, `.claude/rules/`.
 - Path-scoped rules: `.claude/rules/` (loaded automatically).
 - Specialist agents: `.claude/agents/`; procedures: `.claude/skills/`.
 - Frontend specifics and the Next.js version warning: `frontend/AGENTS.md`.
+- Tasks, ideas and PR flow: `docs/process.md` (GitHub issues via `/issue`, product ideas in `docs/ideas.md` via `/idea`, PR template and CI in `.github/`).

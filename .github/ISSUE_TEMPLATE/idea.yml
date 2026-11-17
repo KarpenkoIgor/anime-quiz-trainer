@@ -1,0 +1,20 @@
+name: Idea
+description: A thought or requirement, not planned yet. Every idea is also recorded in docs/ideas.md
+labels: ["idea"]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: The idea in the author's words
+      description: As the author phrased it, not retold (translate faithfully if needed)
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why it is needed
+  - type: textarea
+    id: links
+    attributes:
+      label: Related
+      description: Specs, other ideas and tasks (#N)

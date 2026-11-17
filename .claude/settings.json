@@ -15,7 +15,15 @@
       "Bash(git log:*)",
       "Bash(git branch:*)",
       "Bash(git show:*)",
-      "Bash(git switch:*)"
+      "Bash(git switch:*)",
+      "Skill(new-spec)",
+      "Skill(new-design)",
+      "Skill(new-feature)",
+      "Skill(new-adr)",
+      "Skill(verify)",
+      "Skill(review)",
+      "Skill(sync-docs)",
+      "Skill(idea)"
     ],
     "deny": [
       "Read(**/.env)",
