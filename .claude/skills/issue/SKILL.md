@@ -15,5 +15,6 @@ Source: **$ARGUMENTS**. Talk to the user in Russian. **Everything on GitHub issu
 4. Show the list (title, labels, size) to the user and **ask for confirmation** before creating anything: issues are visible to the whole team.
 5. Check that the labels exist (`gh label list`); create missing ones only after the user agrees.
 6. Create in dependency order with `gh issue create`, collecting the numbers. For several tasks of one spec also create an overview issue with a checklist `- [ ] #N`.
-7. Record the issue numbers in the spec's task table (a column or a line "Задачи: #N–#M"); never renumber existing tasks.
-8. If `gh` is missing or not authenticated, say so and give ready-to-paste issue text instead.
+7. Add each issue to the project board: `gh project item-add 2 --owner KarpenkoIgor --url <issue url>` (needs the `project` scope; if missing, give the user `! gh auth refresh -s project`).
+8. Record the issue numbers in the spec's task table (a column or a line "Задачи: #N–#M"); never renumber existing tasks.
+9. If `gh` is missing or not authenticated, say so and give ready-to-paste issue text instead.
