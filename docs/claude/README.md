@@ -23,7 +23,7 @@
 | Память проекта | `CLAUDE.md`, `backend/CLAUDE.md`, `frontend/AGENTS.md` | Правила и контекст, которые Claude читает сам |
 | Правила по путям | `.claude/rules/*.md` | Подгружаются, когда Claude работает с подходящими файлами |
 | Агенты | `.claude/agents/*.md` | 14 «специалистов» со своим контекстом, инструментами и моделью (все на `sonnet`) |
-| Скиллы (команды) | `.claude/skills/*/SKILL.md` | 9 повторяемых процедур: `/new-feature`, `/new-spec`, `/new-design`, `/verify`, `/pr`… |
+| Скиллы (команды) | `.claude/skills/*/SKILL.md` | 12 повторяемых процедур: `/new-feature`, `/new-spec`, `/new-design`, `/verify`, `/pr`, `/idea`, `/issue`… |
 | Макеты | `docs/design/<фича>/variant-a.html`, `variant-b.html` | HTML-превью двух вариантов интерфейса (двойной клик в браузере); описание — в `docs/design/README.md` |
 | Хуки | `.claude/hooks/*.mjs` + `.claude/settings.json` | Скрипты, которые харнесс запускает **при событии** (гарантии) |
 | Права | `.claude/settings.json` | Что можно без вопросов, что запрещено |
@@ -54,7 +54,7 @@
 
 ## Команды (скиллы)
 
-`/new-feature` — фича от идеи до PR (4 обязательные паузы-GATE) · `/new-spec` — спека, которую вы утверждаете сами · `/new-design` — два макета на выбор · `/new-adr` — архитектурное решение · `/db-migration` — миграция БД · `/verify` — сборка, тесты, lint · `/review` — ревью diff · `/sync-docs` — сверка docs с кодом · `/pr` — pull request.
+`/new-feature` — фича от идеи до PR (4 обязательные паузы-GATE) · `/new-spec` — спека, которую вы утверждаете сами · `/new-design` — два макета на выбор · `/new-adr` — архитектурное решение · `/db-migration` — миграция БД · `/verify` — сборка, тесты, lint · `/review` — ревью diff · `/sync-docs` — сверка docs с кодом · `/pr` — pull request. · `/idea` — запись идеи в `docs/ideas.md` · `/issue` — задачи на GitHub из спеки.
 
 Описание каждой команды, аргументы и примеры — [COMMANDS.md, раздел 6](COMMANDS.md#6-список-команд-этого-проекта).
 
